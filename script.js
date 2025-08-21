@@ -136,8 +136,17 @@ Com base no que você descreveu, a emoção que parece mais presente é a <b>Ans
         const paragraphs = fullResponse.split(/<br><br>|\n{2,}/).filter(p => p.trim() !== '');
 
         for (const paragraph of paragraphs) {
-            appendMessage('bot', paragraph);
+            const loadingMessage = appendMessage('bot', '');
+            loadingMessage.classList.add('loading');
+            const spinner = document.createElement('div');
+            spinner.classList.add('spinner');
+            loadingMessage.appendChild(spinner);
+
             await sleep(1500);
+
+            loadingMessage.classList.remove('loading');
+            loadingMessage.innerHTML = paragraph;
+            loadingMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
         submitButton.disabled = false;
         messageInput.focus();
