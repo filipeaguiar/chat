@@ -116,7 +116,7 @@ Com base no que você descreveu, a emoção que parece mais presente é a <b>Ans
 
         messageContainer.appendChild(messageElement);
         chatBox.appendChild(messageContainer);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        messageElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
         return messageElement;
     }
 
@@ -140,6 +140,7 @@ Com base no que você descreveu, a emoção que parece mais presente é a <b>Ans
             await sleep(1500);
         }
         submitButton.disabled = false;
+        messageInput.focus();
     }
 
 
