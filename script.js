@@ -4,6 +4,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageInput = document.getElementById('message-input');
     const chatBox = document.getElementById('chat-box');
     const submitButton = document.getElementById('submit-button');
+    const installButton = document.getElementById('install-button');
+
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installButton.style.display = 'block';
+    });
+
+    installButton.addEventListener('click', (e) => {
+        installButton.style.display = 'none';
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            } else {
+                console.log('User dismissed the install prompt');
+            }
+            deferredPrompt = null;
+        });
+    });
 
     // --- IMPORTANT ---
     // Replace 'YOUR_API_KEY' with your actual Google AI API Key

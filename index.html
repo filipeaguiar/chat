@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <base href="/chat/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000"/>
     <title>Emotion Chatbot</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <div id="chat-container">
+        <button id="install-button" style="display: none;">Instalar</button>
         <div id="chat-box"></div>
         <form id="message-form">
             <input type="text" id="message-input" placeholder="Digite sua mensagem...">
@@ -15,5 +19,16 @@
         </form>
     </div>
     <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                }).catch(err => {
+                    console.log('Service Worker registration failed:', err);
+                });
+            });
+        }
+    </script>
 </body>
 </html>
