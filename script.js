@@ -165,7 +165,7 @@ Com base no que você descreveu, a emoção que parece mais presente é a <b>Ans
       parts: [{ text: userMessage }]
     });
 
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
 
     const requestBody = {
       contents: chatHistory,
