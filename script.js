@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // To increment the version, change the value of the appVersion constant.
+  const appVersion = '1.0.0';
+  console.log(`Emotion Chatbot Version: ${appVersion}`);
+
   // Get DOM elements
   const messageForm = document.getElementById('message-form');
   const messageInput = document.getElementById('message-input');
