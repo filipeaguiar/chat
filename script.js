@@ -32,12 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --- IMPORTANT ---
-  // Replace 'YOUR_API_KEY' with your actual Google AI API Key
-  const apiKey = 'AIzaSyBcBvZQKwkE8Dvh8baXfVnlvhqcAPR3Otw';
-
-  if (apiKey === 'YOUR_API_KEY') {
-    alert('Please replace "YOUR_API_KEY" with your actual Google AI API Key in script.js');
-  }
+  // The API key is no longer stored here. It is securely stored in the Cloudflare Worker.
 
   // Array to store the chat history, with an initial context-setting message.
   let chatHistory = [{
@@ -169,28 +164,34 @@ Com base no que você descreveu, a emoção que parece mais presente é a <b>Ans
       parts: [{ text: userMessage }]
     });
 
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
+    // !!! IMPORTANT: PASTE YOUR CLOUDFLARE WORKER URL HERE !!!
+    const WORKER_URL = 'https://emotion-bot-worker.filipe-aguiar-cavalcanti.workers.dev';
+
+    if (WORKER_URL.includes('YOUR_WORKER_URL')) {
+      alert('Please replace "YOUR_WORKER_URL" with your actual Cloudflare Worker URL in script.js');
+    }
 
     const requestBody = {
       contents: chatHistory,
     };
 
-    const response = await fetch(API_URL, {
+    const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {
-      const errorBody = await response.json();
-      console.error("API Error:", errorBody);
-      chatHistory.pop();
-      throw new Error(`Failed to fetch from Gemini API. Status: ${response.status}`);
+      const errorText = await response.text();
+      console.error("API Error:", errorText);
+      chatHistory.pop(); // Remove the user message from history on failure
+      throw new Error(`Failed to fetch from API proxy. Status: ${response.status}`);
     }
 
     const data = await response.json();
     const botResponse = data.candidates[0].content.parts[0].text;
 
+    // Add the bot's response to the history
     chatHistory.push({
       role: 'model',
       parts: [{ text: botResponse }]
