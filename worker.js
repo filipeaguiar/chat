@@ -13,33 +13,52 @@ export default {
     // Get the chat history sent from the frontend
     const { contents } = await request.json();
 
-    // The Gemini API URL.
-    const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent';
-
     // Get the API Key from the Cloudflare secrets (we'll set this up in the dashboard)
     const GEMINI_API_KEY = env.GEMINI_API_KEY;
 
-    // Construct the request to the actual Gemini API
-    const geminiRequest = {
-      contents: contents,
-    };
+    const candidateModels = [
+      'gemini-flash-lite-latest',
+      'gemini-3.5-flash-lite',
+      'gemini-3-flash-preview',
+      'gemini-3.1-flash-lite'
+    ];
+    let lastError = null;
 
-    // Make the secure call to the Gemini API
-    const geminiResponse = await fetch(`${API_URL}?key=${GEMINI_API_KEY}`, {
-      method: 'POST',
+    for (const model of candidateModels) {
+      try {
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+        const geminiResponse = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ contents }),
+        });
+
+        if (!geminiResponse.ok) {
+          const errText = await geminiResponse.text();
+          console.warn(`Model ${model} failed (${geminiResponse.status}):`, errText);
+          lastError = new Error(`Status ${geminiResponse.status}: ${errText}`);
+          continue;
+        }
+
+        const geminiData = await geminiResponse.json();
+        return new Response(JSON.stringify(geminiData), {
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders,
+          },
+        });
+      } catch (err) {
+        lastError = err;
+      }
+    }
+
+    return new Response(JSON.stringify({ error: lastError?.message || 'All models failed' }), {
+      status: 502,
       headers: {
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(geminiRequest),
-    });
-
-    // Get the response from Gemini and send it back to your frontend
-    const geminiData = await geminiResponse.json();
-
-    return new Response(JSON.stringify(geminiData), {
-      headers: {
-        'Content-Type': 'application/json',
-        ...corsHeaders, // Add CORS headers to the response
+        ...corsHeaders,
       },
     });
   },
