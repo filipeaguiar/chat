@@ -15,17 +15,23 @@ img {
 
 html, body {
     height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
     font-family: var(--font-family);
     background-color: var(--light-gray);
     overflow: hidden;
+    overscroll-behavior: none;
 }
 
 #chat-container {
+    position: fixed;
+    top: var(--app-offset-top, 0px);
+    left: 0;
+    right: 0;
     display: grid;
-    grid-template-rows: auto 1fr auto;
-    height: 100%;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    height: var(--app-height, 100dvh);
     width: 100%;
     max-width: 500px;
     margin: 0 auto;
@@ -67,7 +73,9 @@ html, body {
 
 #chat-box {
     grid-row: 2 / 3;
+    min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -77,6 +85,7 @@ html, body {
 .message-form-container {
     grid-row: 3 / 4;
     padding: 10px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
     background-color: var(--background-color);
     border-top: 1px solid var(--medium-gray);
 }
@@ -91,7 +100,7 @@ html, body {
     border: 1px solid #ccc;
     border-radius: 20px;
     margin-right: 10px;
-    font-size: 1em;
+    font-size: 16px;
 }
 
 #submit-button {

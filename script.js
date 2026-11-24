@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   // To increment the version, change the value of the appVersion constant.
-  const appVersion = '1.0.1';
+  const appVersion = '1.0.2';
   console.log(`Emotion Chatbot Version: ${appVersion}`);
 
   // Get DOM elements
@@ -9,6 +9,36 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatBox = document.getElementById('chat-box');
   const submitButton = document.getElementById('submit-button');
   const installButton = document.getElementById('install-button');
+
+  // Keep layout aligned with the visible viewport when the mobile keyboard opens
+  const syncViewportLayout = () => {
+    if (window.visualViewport) {
+      const { height, offsetTop } = window.visualViewport;
+      document.documentElement.style.setProperty('--app-height', `${height}px`);
+      document.documentElement.style.setProperty('--app-offset-top', `${offsetTop}px`);
+    } else {
+      document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
+      document.documentElement.style.setProperty('--app-offset-top', '0px');
+    }
+
+    if (document.activeElement === messageInput) {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  };
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', syncViewportLayout);
+    window.visualViewport.addEventListener('scroll', syncViewportLayout);
+  }
+  window.addEventListener('resize', syncViewportLayout);
+  syncViewportLayout();
+
+  messageInput.addEventListener('focus', () => {
+    setTimeout(() => {
+      syncViewportLayout();
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }, 300);
+  });
 
   let deferredPrompt;
 
