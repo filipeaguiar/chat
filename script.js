@@ -123,6 +123,7 @@ Com base no que você descreveu, a emoção que parece mais presente é a <b>Ans
 
     /**
      * Sends a message to the Gemini API and returns the bot's response.
+     * Uses active models with automatic fallback if a model experiences high demand.
      * @param {string} userMessage - The user's message.
      * @returns {Promise<string>} The bot's response text.
      */
@@ -133,34 +134,54 @@ Com base no que você descreveu, a emoção que parece mais presente é a <b>Ans
             parts: [{ text: userMessage }]
         });
 
-        const API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const candidateModels = [
+            'gemini-flash-lite-latest',
+            'gemini-3.5-flash-lite',
+            'gemini-3-flash-preview',
+            'gemini-3.1-flash-lite'
+        ];
+        let lastError = null;
 
-        const requestBody = {
-            contents: chatHistory,
-        };
+        for (const model of candidateModels) {
+            try {
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestBody)
-        });
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: chatHistory })
+                });
 
-        if (!response.ok) {
-            const errorBody = await response.json();
-            console.error("API Error:", errorBody);
-            chatHistory.pop();
-            throw new Error(`Failed to fetch from Gemini API. Status: ${response.status}`);
+                if (!response.ok) {
+                    const errorBody = await response.json().catch(() => ({}));
+                    console.warn(`Tentativa com ${model} falhou (${response.status}):`, errorBody);
+                    lastError = new Error(`API error (${response.status}) on model ${model}`);
+                    continue;
+                }
+
+                const data = await response.json();
+                const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (!botResponse) {
+                    console.warn(`Resposta sem conteúdo no modelo ${model}:`, data);
+                    lastError = new Error(`No text returned by model ${model}`);
+                    continue;
+                }
+
+                chatHistory.push({
+                    role: 'model',
+                    parts: [{ text: botResponse }]
+                });
+
+                return botResponse;
+            } catch (err) {
+                lastError = err;
+            }
         }
 
-        const data = await response.json();
-        const botResponse = data.candidates[0].content.parts[0].text;
-
-        chatHistory.push({
-            role: 'model',
-            parts: [{ text: botResponse }]
-        });
-
-        return botResponse;
+        // If all candidate models failed, revert history and throw error
+        chatHistory.pop();
+        throw lastError || new Error('Não foi possível obter resposta dos modelos disponíveis.');
     }
 });
 
