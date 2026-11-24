@@ -112,14 +112,28 @@ Cuidar do <b>meio ambiente</b> começa com atitudes simples no dia a dia que, so
     }
 
     /**
+     * Converts Markdown bold/italic/bullets to HTML so raw asterisks never appear.
+     * @param {string} text - Raw paragraph text from the model.
+     * @returns {string} HTML-formatted text.
+     */
+    function formatBotMessage(text) {
+        return text
+            .trim()
+            .replace(/^\s*[-*]\s+/gm, '• ')
+            .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+            .replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g, '$1<i>$2</i>')
+            .replace(/\n/g, '<br>');
+    }
+
+    /**
      * Displays the bot's response paragraph by paragraph with a delay.
      * @param {string} fullResponse - The full text response from the API.
      */
     async function displayBotResponseParagraphs(fullResponse) {
-        const paragraphs = fullResponse.split(/<br><br>|\n{2,}/).filter(p => p.trim() !== '');
+        const paragraphs = fullResponse.split(/(?:<br\s*\/?>\s*){2,}|\n{2,}/i).filter(p => p.trim() !== '');
 
         for (const paragraph of paragraphs) {
-            appendMessage('bot', paragraph);
+            appendMessage('bot', formatBotMessage(paragraph));
             await sleep(1500);
         }
         submitButton.disabled = false;
