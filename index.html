@@ -4,16 +4,19 @@
     <base href="/chat/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-    <meta name="theme-color" content="#007bff"/>
-    <title>Emotion Chatbot</title>
+    <meta name="theme-color" content="#0f766e"/>
+    <title>BioChat — Doenças e Meio Ambiente</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <div id="chat-container">
         <header class="app-header">
-            <img src="robo.jpg" alt="Avatar do Robô" class="header-avatar">
-            <h1>Emotion Chatbot</h1>
+            <img src="robo.jpg" alt="Avatar do BioChat" class="header-avatar">
+            <div class="header-title">
+                <h1>BioChat</h1>
+                <span class="header-subtitle">Doenças e Meio Ambiente</span>
+            </div>
             <button id="install-button" style="display: none;">Instalar</button>
         </header>
 
@@ -21,7 +24,7 @@
 
         <footer class="message-form-container">
             <form id="message-form">
-                <input type="text" id="message-input" placeholder="Digite sua mensagem...">
+                <input type="text" id="message-input" placeholder="Pergunte sobre doenças ou meio ambiente...">
                 <button type="submit" id="submit-button">Enviar</button>
             </form>
         </footer>

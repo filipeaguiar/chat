@@ -1,11 +1,11 @@
 {
-  "name": "Emotion Chatbot",
-  "short_name": "EmotionBot",
-  "description": "Um chatbot que identifica emoções.",
+  "name": "BioChat — Doenças e Meio Ambiente",
+  "short_name": "BioChat",
+  "description": "Chatbot educativo sobre Doenças e Meio Ambiente.",
   "start_url": "/chat/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#f0fdf9",
+  "theme_color": "#0f766e",
   "icons": [
     {
       "src": "icon-192x192.png",

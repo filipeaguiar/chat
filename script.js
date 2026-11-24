@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   // To increment the version, change the value of the appVersion constant.
-  const appVersion = '1.0.3';
-  console.log(`Emotion Chatbot Version: ${appVersion}`);
+  const appVersion = '1.1.0';
+  console.log(`BioChat Version: ${appVersion}`);
 
   // Get DOM elements
   const messageForm = document.getElementById('message-form');
