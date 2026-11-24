@@ -126,6 +126,11 @@ html, body {
     flex-direction: column;
     gap: 14px;
     scroll-behavior: smooth;
+    background-color: #ebf5f2;
+    background-image:
+        linear-gradient(180deg, rgba(235, 245, 242, 0.45) 0%, rgba(244, 250, 248, 0.35) 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg fill='none' stroke='%230f766e' stroke-opacity='0.09' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M24 44 C24 26 42 18 52 18 C52 34 44 48 24 44 Z M24 44 L42 28'/%3E%3Cpath d='M118 22 C118 22 108 35 108 42 A10 10 0 0 0 128 42 C128 35 118 22 118 22 Z'/%3E%3Cpath d='M36 108 v16 M28 116 h16'/%3E%3Ccircle cx='36' cy='116' r='14'/%3E%3Ccircle cx='120' cy='118' r='13'/%3E%3Cpath d='M107 118 h26 M120 105 c4 4 4 22 0 26 M120 105 c-4 4-4 22 0 26'/%3E%3Ccircle cx='80' cy='78' r='2' fill='%230f766e' fill-opacity='0.08' stroke='none'/%3E%3Ccircle cx='16' cy='80' r='1.5' fill='%230f766e' fill-opacity='0.07' stroke='none'/%3E%3Ccircle cx='144' cy='76' r='1.5' fill='%230f766e' fill-opacity='0.07' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: auto, 160px 160px;
 }
 
 .message-form-container {

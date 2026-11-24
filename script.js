@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   // To increment the version, change the value of the appVersion constant.
-  const appVersion = '1.1.1';
+  const appVersion = '1.1.2';
   console.log(`BioChat Version: ${appVersion}`);
 
   // Get DOM elements
